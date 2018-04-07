@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>净现值</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+  </head>
+   <script type="text/javascript">
+  function MakeChildForm() {
+		var form = document.getElementById("form");
+	 	//清空
+		while (form.hasChildNodes()) //当form下还存在子节点时 循环继续
+		{
+			form.removeChild(form.firstChild);
+		} 
+		//插入新的表格
+		tr = document.createElement("tr");
+		
+		td1 = document.createElement("td");
+		td1.innerHTML = "年";
+		tr.appendChild(td1);
+
+		td2 = document.createElement("td");
+		td2.innerHTML = "生产值";
+		tr.appendChild(td2);
+		
+		td3 = document.createElement("td");
+		td3.innerHTML = "当年净现值";
+		tr.appendChild(td3);
+			
+		form.appendChild(tr);
+		//插入文本框
+		for (i = 0; i < document.getElementById("num").value; i++) {
+			tr = document.createElement("tr");
+
+			td1 = document.createElement("td");
+			td1.innerHTML = "第" + (i + 1) + "年:";
+			tr.appendChild(td1);
+
+			td2 = document.createElement("td");
+			td2.innerHTML = "<input type='text' id='"+i+"'/>";
+			tr.appendChild(td2);
+
+			td3 = document.createElement("td");
+			td3.id = "result" + i;
+			tr.appendChild(td3);
+
+			form.appendChild(tr);
+
+		}
+		//贴现率
+		tr2 = document.createElement("tr");
+		td = document.createElement("td");
+		td.colSpan = 3;
+		td.innerHTML = "请输入贴现率：<input type='text' id='tiexian'/><button onclick='calculate()'>计算</button>";
+		tr2.appendChild(td);
+		form.appendChild(tr2);
+		//npv
+		tr1 = document.createElement("tr");
+		td1 = document.createElement("td");
+		td1.innerHTML = "NPV:";
+		tr1.appendChild(td1);
+		td2 = document.createElement("td");
+		td2.colSpan = 2;
+		td2.id = "npv";
+		tr1.appendChild(td2);
+		form.appendChild(tr1);
+	}
+
+	function calculate() {
+		var r = parseFloat(document.getElementById("tiexian").value);
+		var npv = parseFloat(0);
+		for (i = 0; i < document.getElementById("num").value; i++) {
+			n = 1 + r;
+			for (j = 0; j < i; j++) {
+				n = n * (1 + r);
+			}
+			result = parseFloat(document.getElementById(i).value) / n;
+			if(isNaN(result)){ 
+				document.getElementById("result" + i).innerHTML = "输入错误！！";
+			}else{
+				document.getElementById("result" + i).innerHTML = result;
+			}
+			npv = npv + result;
+		}
+		if(isNaN(npv)){ 
+			document.getElementById("npv").innerHTML = "输入错误！！";
+		}else{
+			document.getElementById("npv").innerHTML = npv;
+		}
+		
+	}
+  </script>
+ 
+ 
+  	<center><table  id="form">
+		请输入年数：<input type="text" id="num">
+    	<button onclick="MakeChildForm()">确定</button>
+    	<br><br>
+		</table>
+	</center>
+	
+  </body>
+  
+  
+</html>
